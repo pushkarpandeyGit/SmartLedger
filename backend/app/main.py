@@ -25,51 +25,51 @@ def initialize_database():
             office_acc = db.query(Account).filter(Account.code == "5030").first()
 
             if cash_acc and equity_acc:
-                # 1. Initial Foundational Capital Injection: £50,000
+                # 1. Initial Foundational Capital Injection: Â£50,000
                 post_journal_entry(db, JournalEntryCreate(
                     description="Initial Capital Equity Allocation",
                     legs=[
-                        TransactionLegCreate(account_id=cash_acc.id, amount=50000.0, entry_type=EntryType.DEBIT),
-                        TransactionLegCreate(account_id=equity_acc.id, amount=50000.0, entry_type=EntryType.CREDIT)
+                        TransactionLegCreate(account_id=cash_acc.id, amount=500000.0, entry_type=EntryType.DEBIT),
+                        TransactionLegCreate(account_id=equity_acc.id, amount=500000.0, entry_type=EntryType.CREDIT)
                     ]
                 ))
 
             if cash_acc and rev_acc:
-                # 2. Enterprise Client SaaS Inflow: £12,500
+                # 2. Enterprise Client SaaS Inflow: Â£12,500
                 post_journal_entry(db, JournalEntryCreate(
                     description="Tier-1 Banking API Integration License Fee",
                     legs=[
-                        TransactionLegCreate(account_id=cash_acc.id, amount=12500.0, entry_type=EntryType.DEBIT),
-                        TransactionLegCreate(account_id=rev_acc.id, amount=12500.0, entry_type=EntryType.CREDIT)
+                        TransactionLegCreate(account_id=cash_acc.id, amount=125000.0, entry_type=EntryType.DEBIT),
+                        TransactionLegCreate(account_id=rev_acc.id, amount=125000.0, entry_type=EntryType.CREDIT)
                     ]
                 ))
 
             if cash_acc and cloud_acc:
-                # 3. Monthly Cloud Infrastructure: £1,250
+                # 3. Monthly Cloud Infrastructure: Â£1,250
                 post_journal_entry(db, JournalEntryCreate(
                     description="AWS High-Availability Cluster Hosting",
                     legs=[
-                        TransactionLegCreate(account_id=cloud_acc.id, amount=1250.0, entry_type=EntryType.DEBIT),
-                        TransactionLegCreate(account_id=cash_acc.id, amount=1250.0, entry_type=EntryType.CREDIT)
+                        TransactionLegCreate(account_id=cloud_acc.id, amount=25000.0, entry_type=EntryType.DEBIT),
+                        TransactionLegCreate(account_id=cash_acc.id, amount=25000.0, entry_type=EntryType.CREDIT)
                     ]
                 ))
 
             if cash_acc and office_acc:
-                # 4. Routine Office Operations: £350
+                # 4. Routine Office Operations: Â£350
                 post_journal_entry(db, JournalEntryCreate(
                     description="Quarterly Hardware & Office Connectivity",
                     legs=[
-                        TransactionLegCreate(account_id=office_acc.id, amount=350.0, entry_type=EntryType.DEBIT),
-                        TransactionLegCreate(account_id=cash_acc.id, amount=350.0, entry_type=EntryType.CREDIT)
+                        TransactionLegCreate(account_id=office_acc.id, amount=12000.0, entry_type=EntryType.DEBIT),
+                        TransactionLegCreate(account_id=cash_acc.id, amount=12000.0, entry_type=EntryType.CREDIT)
                     ]
                 ))
 
-                # 5. Outlier/Anomaly Simulation: An unusually large expense £4,800
+                # 5. Outlier/Anomaly Simulation: An unusually large expense Â£4,800
                 post_journal_entry(db, JournalEntryCreate(
                     description="Emergency Datacenter Disaster Recovery Drill",
                     legs=[
-                        TransactionLegCreate(account_id=cloud_acc.id, amount=4800.0, entry_type=EntryType.DEBIT),
-                        TransactionLegCreate(account_id=cash_acc.id, amount=4800.0, entry_type=EntryType.CREDIT)
+                        TransactionLegCreate(account_id=cloud_acc.id, amount=180000.0, entry_type=EntryType.DEBIT),
+                        TransactionLegCreate(account_id=cash_acc.id, amount=180000.0, entry_type=EntryType.CREDIT)
                     ]
                 ))
     finally:

@@ -77,7 +77,7 @@ export default function App() {
                 <Activity className="w-4 h-4 text-cyan-400" />
                 <div>
                   <div className="text-[11px] text-slate-400 font-medium">Invariant Rule</div>
-                  <div className="text-xs font-bold text-slate-200">Σ Debits == Σ Credits</div>
+                  <div className="text-xs font-bold text-slate-200">Î₹ Debits == Î₹ Credits</div>
                 </div>
               </div>
 
@@ -147,7 +147,7 @@ export default function App() {
                     <span className="text-[10px] text-slate-400">{acc.account_type}</span>
                   </div>
                   <div className="text-right font-mono text-xs font-bold text-white">
-                    £{acc.balance.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                    ₹{acc.balance.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                   </div>
                 </div>
               ))}

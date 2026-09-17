@@ -21,7 +21,7 @@ const Navbar = ({ onOpenPostModal, onRefresh, loading }) => {
               </span>
             </div>
             <p className="text-[11px] text-slate-400 hidden sm:block">
-              NatWest Portfolio • Real-Time Double-Entry Ledger & Risk Analytics
+              Real-Time Double-Entry Ledger & Risk Analytics
             </p>
           </div>
         </div>

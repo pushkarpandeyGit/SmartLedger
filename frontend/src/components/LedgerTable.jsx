@@ -26,8 +26,8 @@ const LedgerTable = ({ entries = [], accounts = [] }) => {
               <th className="py-2.5 px-3">Reference</th>
               <th className="py-2.5 px-3">Description</th>
               <th className="py-2.5 px-3">Account</th>
-              <th className="py-2.5 px-3 text-right">Debit (£)</th>
-              <th className="py-2.5 px-3 text-right">Credit (£)</th>
+              <th className="py-2.5 px-3 text-right">Debit (₹)</th>
+              <th className="py-2.5 px-3 text-right">Credit (₹)</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-800/60">
@@ -73,7 +73,7 @@ const LedgerTable = ({ entries = [], accounts = [] }) => {
                         {leg.entry_type === 'DEBIT' ? (
                           <span className="text-emerald-400 font-semibold inline-flex items-center gap-0.5">
                             <ArrowUpRight className="w-3 h-3 text-emerald-500" />
-                            £{leg.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                            ₹{leg.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                           </span>
                         ) : (
                           <span className="text-slate-600">-</span>
@@ -85,7 +85,7 @@ const LedgerTable = ({ entries = [], accounts = [] }) => {
                         {leg.entry_type === 'CREDIT' ? (
                           <span className="text-blue-400 font-semibold inline-flex items-center gap-0.5">
                             <ArrowDownLeft className="w-3 h-3 text-blue-500" />
-                            £{leg.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                            ₹{leg.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                           </span>
                         ) : (
                           <span className="text-slate-600">-</span>

@@ -25,16 +25,16 @@ const PostTransactionModal = ({ isOpen, onClose, accounts = [], onSuccess }) => 
       const rev = accounts.find((a) => a.code === '4010');
       if (cash) setDebitAccountId(cash.id);
       if (rev) setCreditAccountId(rev.id);
-      setDebitAmount('3500');
-      setCreditAmount('3500');
+      setDebitAmount('75000');
+      setCreditAmount('75000');
     } else if (type === 'cloud_expense') {
       setDescription('AWS Kubernetes Cluster Monthly Compute');
       const cloud = accounts.find((a) => a.code === '5010');
       const cash = accounts.find((a) => a.code === '1010');
       if (cloud) setDebitAccountId(cloud.id);
       if (cash) setCreditAccountId(cash.id);
-      setDebitAmount('850');
-      setCreditAmount('850');
+      setDebitAmount('25000');
+      setCreditAmount('25000');
     }
   };
 
@@ -110,14 +110,14 @@ const PostTransactionModal = ({ isOpen, onClose, accounts = [], onSuccess }) => 
             onClick={() => applyTemplate('saas_revenue')}
             className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-cyan-300 transition cursor-pointer"
           >
-            + Client Revenue (£3.5k)
+            + Client Revenue (₹3.5k)
           </button>
           <button
             type="button"
             onClick={() => applyTemplate('cloud_expense')}
             className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-amber-300 transition cursor-pointer"
           >
-            + Cloud Hosting (£850)
+            + Cloud Hosting (₹25000)
           </button>
         </div>
 
@@ -165,7 +165,7 @@ const PostTransactionModal = ({ isOpen, onClose, accounts = [], onSuccess }) => 
               </div>
 
               <div>
-                <label className="block text-[10px] text-slate-400 mb-1">Debit Amount (£)</label>
+                <label className="block text-[10px] text-slate-400 mb-1">Debit Amount (₹)</label>
                 <input
                   type="number"
                   step="0.01"
@@ -202,7 +202,7 @@ const PostTransactionModal = ({ isOpen, onClose, accounts = [], onSuccess }) => 
               </div>
 
               <div>
-                <label className="block text-[10px] text-slate-400 mb-1">Credit Amount (£)</label>
+                <label className="block text-[10px] text-slate-400 mb-1">Credit Amount (₹)</label>
                 <input
                   type="number"
                   step="0.01"
@@ -230,14 +230,14 @@ const PostTransactionModal = ({ isOpen, onClose, accounts = [], onSuccess }) => 
                   {isBalanced ? 'Double-Entry Invariant Satisfied' : 'Ledger Out of Balance'}
                 </div>
                 <div className="text-[10px] text-slate-400 font-mono">
-                  Debit: £{dAmt.toFixed(2)} | Credit: £{cAmt.toFixed(2)}
+                  Debit: ₹{dAmt.toFixed(2)} | Credit: ₹{cAmt.toFixed(2)}
                 </div>
               </div>
             </div>
 
             {!isBalanced && (
               <span className="text-[11px] font-mono text-amber-400 font-bold bg-amber-500/10 px-2 py-0.5 rounded">
-                Imbalance: £{imbalance.toFixed(2)}
+                Imbalance: ₹{imbalance.toFixed(2)}
               </span>
             )}
           </div>

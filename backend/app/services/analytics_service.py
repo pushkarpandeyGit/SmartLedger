@@ -61,7 +61,7 @@ def get_financial_summary(db: Session) -> Dict[str, Any]:
         "total_expenses": round(total_expenses, 2),
         "net_income": net_income,
         "expense_breakdown": category_breakdown,
-        "currency": "GBP"
+        "currency": "INR"
     }
 
     set_cached_json(cache_key, summary, ttl=60)

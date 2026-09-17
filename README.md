@@ -1,148 +1,151 @@
-# ðŸ’³ SmartLedger â€” High-Integrity Double-Entry Banking & Risk Analytics Engine
+# SmartLedger 💳
 
-> Production-style financial ledger and risk intelligence engine designed for core banking environments. Features strict GAAP/IFRS double-entry transaction validation ($\sum \text{Debits} == \sum \text{Credits}$), Redis in-memory balance caching, and statistical Z-score outlier detection.
+A high-integrity double-entry core banking engine and financial risk analytics platform built with Python, FastAPI, SQLAlchemy, Redis, and React.
 
-[![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://python.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-teal.svg)](https://fastapi.tiangolo.com/)
-[![SQLAlchemy](https://img.shields.io/badge/ORM-SQLAlchemy%202.0-red.svg)](https://sqlalchemy.org/)
-[![Redis](https://img.shields.io/badge/Cache-Redis-darkred.svg)](https://redis.io/)
-[![Pytest](https://img.shields.io/badge/Tests-Pytest%20100%25%20Passing-brightgreen.svg)]()
-[![React](https://img.shields.io/badge/React-19-blue.svg)](https://react.dev/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-cyan.svg)](https://tailwindcss.com/)
+Most personal finance and expense tracker projects are built with a single transactions table where balances are updated arbitrarily (`balance -= amount`). In real-world enterprise banking (such as NatWest), this approach fails regulatory compliance and causes silent data corruption. 
+
+I built SmartLedger according to GAAP/IFRS accounting standards: every financial event is an atomic journal entry with at least two legs where total debits must equal total credits down to the exact paisa.
 
 ---
 
-## ðŸ›ï¸ System Architecture
+## What It Does
+
+- **Strict Double-Entry Invariant:** Enforces the fundamental banking rule:
+  $$\sum \text{Debits} == \sum \text{Credits}$$
+  Pydantic v2 validates all transactions before opening database sessions. Any imbalanced transaction (e.g. Debit ₹5,000 vs Credit ₹4,200) is rejected with HTTP `422 Unprocessable Entity`.
+- **Standard Chart of Accounts (GAAP/IFRS):**
+  - **Assets & Expenses:** Normal balance is **Debit** ($\text{Balance} = \sum \text{Debits} - \sum \text{Credits}$).
+  - **Liabilities, Equity & Revenue:** Normal balance is **Credit** ($\text{Balance} = \sum \text{Credits} - \sum \text{Debits}$).
+- **Redis In-Memory Caching:** Account balances and balance sheet summaries are cached in Redis with a 60-second TTL. The cache is automatically evicted/invalidated whenever a new journal posting is committed.
+- **Statistical Risk Intelligence (Z-Score Anomaly Engine):** Analyzes historical distributions of outgoing disbursements. Any transaction deviating by $Z \ge 1.8\sigma$ from the mean is flagged with a compliance risk alert.
+- **Interactive UI with Balance Validation:** The React modal features live real-time debit vs. credit validation, disabling the commit button until books balance.
+- **Automated Testing Suite:** 100% test coverage using Pytest verifying atomic commits, schema rollbacks, and mathematical balance sheet reconciliation.
+
+---
+
+## System Architecture
 
 ```
-                               â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-                               â”‚       React Frontend (Vite + Tailwind)       â”‚
-                               â”‚  - Live Real-Time Double-Entry Balance Bar   â”‚
-                               â”‚  - Chart of Accounts & Balances              â”‚
-                               â”‚  - Statistical Anomaly Risk Alert Banner     â”‚
-                               â”‚  - Operating Expense Distribution Visualizer â”‚
-                               â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                                                      â”‚
-                                   JSON REST Requests â”‚ http://localhost:8000/api/v1
-                                                      â–¼
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                                 FastAPI Financial Gateway                                   â”‚
-â”‚                                                                                             â”‚
-â”‚  [Pydantic v2 Invariant Guard] â”€â”€â–¶ [Lifespan Startup Seeder] â”€â”€â–¶ [OpenAPI / Swagger Docs]   â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                            â”‚                                   â”‚
-     1. Validate: Î£ Debits == Î£ Credits                2. Real-Time Analytics
-                            â–¼                                   â–¼
-                 â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”               â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-                 â”‚  SQLAlchemy Engine â”‚               â”‚   Risk Anomaly     â”‚
-                 â”‚  (SQLite / Postgresâ”‚               â”‚  Z-Score Engine    â”‚
-                 â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜               â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â–²â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                            â”‚                                   â”‚
-               Commit / Rollback ACID Trans.                    â”‚ Outlier Debits (> 1.8Ïƒ)
-                            â–¼                                   â”‚
-                 â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”                         â”‚
-                 â”‚  General Ledger    â”‚â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                 â”‚ (Journal & Legs)   â”‚
-                 â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                            â”‚ Invalidate on Mutation
-                            â–¼
-                 â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-                 â”‚  Redis Cache Layer â”‚ (Sub-millisecond balance reads & summary analytics)
-                 â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                               ┌──────────────────────────────────────────────┐
+                               │       React Frontend (Vite + Tailwind)       │
+                               │  - Live Real-Time Double-Entry Balance Bar   │
+                               │  - Chart of Accounts & Balances              │
+                               │  - Statistical Anomaly Risk Alert Banner     │
+                               │  - Operating Expense Distribution Visualizer │
+                               └──────────────────────┬───────────────────────┘
+                                                      │
+                                   JSON REST Requests │ http://localhost:8000/api/v1
+                                                      ▼
+┌─────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                 FastAPI Financial Gateway                                   │
+│                                                                                             │
+│  [Pydantic v2 Invariant Guard] ──▶ [Lifespan Startup Seeder] ──▶ [OpenAPI / Swagger Docs]   │
+└───────────────────────────┬───────────────────────────────────┬─────────────────────────────┘
+                            │                                   │
+     1. Validate: Σ Debits == Σ Credits                2. Real-Time Analytics
+                            ▼                                   ▼
+                 ┌────────────────────┐               ┌────────────────────┐
+                 │  SQLAlchemy Engine │               │   Risk Anomaly     │
+                 │  (SQLite / Postgres│               │  Z-Score Engine    │
+                 └──────────┬─────────┘               └─────────▲──────────┘
+                            │                                   │
+               Commit / Rollback ACID Trans.                    │ Outlier Debits (> 1.8σ)
+                            ▼                                   │
+                 ┌────────────────────┐                         │
+                 │  General Ledger    │─────────────────────────┘
+                 │ (Journal & Legs)   │
+                 └──────────┬─────────┘
+                            │ Invalidate on Mutation
+                            ▼
+                 ┌────────────────────┐
+                 │  Redis Cache Layer │ (Sub-millisecond balance reads & summary analytics)
+                 └────────────────────┘
 ```
 
 ---
 
-## ðŸš€ Key Engineering & Financial Highlights (Interview Discussion Points)
+## Tech Stack
 
-1. **The Double-Entry Mathematical Invariant:**
-   - Instead of modifying balances arbitrarily, every financial event creates a `JournalEntry` containing at least two `TransactionLeg` records.
-   - Pydantic v2 enforces down to the cent:
-     $$\sum \text{Debits} == \sum \text{Credits}$$
-   - Any unbalanced posting (e.g. Debit Â£100 vs Credit Â£90) is blocked with an HTTP `422 Unprocessable Entity` before reaching database locks.
-
-2. **Standard Chart of Accounts (GAAP/IFRS):**
-   - Implements banking standard account categories:
-     - **Assets (1000s)** & **Expenses (5000s):** Normal balance is **Debit** ($\text{Balance} = \sum \text{Debits} - \sum \text{Credits}$).
-     - **Liabilities (2000s)**, **Equity (3000s)** & **Revenue (4000s):** Normal balance is **Credit** ($\text{Balance} = \sum \text{Credits} - \sum \text{Debits}$).
-
-3. **Redis In-Memory Balance Caching & Circuit Breaking:**
-   - Account balances and portfolio metrics are cached in Redis with a 60-second TTL.
-   - Posting any new transaction immediately invalidates matching Redis cache keys (`smartledger:balance:*` and `smartledger:analytics:*`).
-   - Built with graceful circuit breaking: if Redis is offline locally, queries seamlessly fall back to database calculations without disruption.
-
-4. **Statistical Anomaly & Fraud Risk Detection:**
-   - Computes historical mean ($\mu$) and standard deviation ($\sigma$) across debit transactions.
-   - Identifies outliers where $Z = \frac{\text{Amount} - \mu}{\sigma} \ge 1.8$, providing a transparent reason string for compliance reviews.
-
-5. **Automated Testing Suite (100% Pass Rate):**
-   - Pytest test suite in `tests/test_ledger.py` verifying health probes, balanced transaction success, atomic rollbacks on unbalanced inputs, balance sheet reconciliation, and outlier detection.
+- **Backend:** Python 3.11, FastAPI, SQLAlchemy 2.0, Pydantic v2, Redis (redis-py), Uvicorn
+- **Database:** SQLite (default for development) / PostgreSQL ready
+- **Frontend:** React 19, Vite, Tailwind CSS, Lucide React
+- **Testing:** Pytest, HTTPX, Starlette TestClient
+- **DevOps:** Docker, Docker Compose
 
 ---
 
-## ðŸ“ Repository Structure
+## Project Structure
 
 ```
 smartledger/
-â”œâ”€â”€ backend/
-â”‚   â”œâ”€â”€ app/
-â”‚   â”‚   â”œâ”€â”€ core/            # Config, SQLAlchemy DB session, Redis client with circuit breaker
-â”‚   â”‚   â”œâ”€â”€ models/          # Account, JournalEntry, TransactionLeg (SQLAlchemy ORM)
-â”‚   â”‚   â”œâ”€â”€ schemas/         # Pydantic v2 validation models enforcing double-entry invariants
-â”‚   â”‚   â”œâ”€â”€ services/        # Double-entry ledger engine, Anomaly detector, Analytics
-â”‚   â”‚   â”œâ”€â”€ routers/         # /accounts, /ledger, /analytics, /health
-â”‚   â”‚   â””â”€â”€ main.py          # FastAPI application & startup seed data
-â”‚   â”œâ”€â”€ tests/               # Pytest automated test suite (100% pass)
-â”‚   â”œâ”€â”€ EXPLAINER.md         # Plain-English interview cheat sheet for Banking & Accounting APIs
-â”‚   â”œâ”€â”€ requirements.txt
-â”‚   â””â”€â”€ pytest.ini
-â”œâ”€â”€ frontend/
-â”‚   â”œâ”€â”€ src/
-â”‚   â”‚   â”œâ”€â”€ components/      # MetricCards, AnomalyAlert, ExpenseBreakdown, LedgerTable, PostModal
-â”‚   â”‚   â”œâ”€â”€ App.jsx          # Dashboard layout & live banking metrics
-â”‚   â”‚   â””â”€â”€ index.css        # Tailwind styling & dark banking theme
-â”‚   â”œâ”€â”€ vite.config.js       # Proxy configurations to backend (:8000)
-â”‚   â””â”€â”€ package.json
-â””â”€â”€ README.md
+├── backend/
+│   ├── app/
+│   │   ├── core/            # Config, database session, Redis client with circuit breaker
+│   │   ├── models/          # Account, JournalEntry, TransactionLeg (SQLAlchemy ORM)
+│   │   ├── schemas/         # Pydantic v2 models enforcing double-entry invariants
+│   │   ├── services/        # Double-entry ledger engine, Anomaly detector, Analytics
+│   │   ├── routers/         # /accounts, /ledger, /analytics, /health
+│   │   └── main.py          # FastAPI application & lifespan seed data
+│   ├── tests/               # Pytest automated test suite (100% passing)
+│   ├── EXPLAINER.md         # Plain-English interview notes on banking concepts
+│   ├── requirements.txt
+│   ├── pytest.ini
+│   └── Dockerfile
+├── frontend/
+│   ├── src/
+│   │   ├── components/      # MetricCards, AnomalyAlert, ExpenseBreakdown, LedgerTable, PostModal
+│   │   ├── App.jsx          # Dashboard layout and live banking metrics
+│   │   └── index.css        # Tailwind styling and dark banking theme
+│   ├── Dockerfile
+│   ├── vite.config.js
+│   └── package.json
+├── docker-compose.yml
+└── README.md
 ```
 
 ---
 
-## ðŸ› ï¸ Quick Start Guide
+## Quick Start
 
+### Option 1: Run with Docker Compose
 
-### 🐳 Run with Docker Compose (One-Click Setup)
+Make sure Docker Desktop is running:
+
 ```bash
 docker-compose up --build
 ```
-This automatically boots:
-- Redis on port `6379`
-- SmartLedger FastAPI Backend on `http://localhost:8000`
-- SmartLedger React Frontend on `http://localhost:80`
 
-### 1. Run Backend
+This boots:
+- **Redis** on port `6379`
+- **FastAPI Backend** on `http://localhost:8000`
+- **React Frontend** on `http://localhost:80`
+
+---
+
+### Option 2: Run Locally (Manual)
+
+#### 1. Backend Setup
+
 ```bash
 cd backend
-# Create virtual environment if needed
-python -m venv venv
-.\venv\Scripts\activate
-pip install -r requirements.txt
+python -m venv .venv
+.\.venv\Scripts\activate
+pip install -r requirements.txt python-dotenv
+```
 
-# Start FastAPI server
-.\venv\Scripts\uvicorn app.main:app --reload --port 8000
+Start the FastAPI server:
+```bash
+.\.venv\Scripts\uvicorn app.main:app --reload --port 8000
 ```
 - API Server: `http://localhost:8000`
-- Interactive Swagger UI: `http://localhost:8000/docs`
+- Interactive OpenAPI / Swagger UI: `http://localhost:8000/docs`
 - Health Probe: `http://localhost:8000/health`
 
-**Run Tests:**
-```bash
-.\venv\Scripts\pytest -v
-```
+#### 2. Frontend Setup
 
-### 2. Run Frontend
+In a new terminal:
 ```bash
-cd ../frontend
+cd frontend
 npm install
 npm run dev
 ```
@@ -150,11 +153,32 @@ Open `http://localhost:5174` in your browser.
 
 ---
 
-## ðŸ“ Resume Bullet Points (Tailored for NatWest)
+## Running Automated Tests
 
-```markdown
-- Designed and engineered SmartLedger, a core banking double-entry ledger platform using Python, FastAPI, SQLAlchemy, and React, enforcing GAAP/IFRS balance invariants (Debits == Credits) down to the cent.
-- Implemented in-memory caching using Redis (60s TTL) with automated key invalidation on new postings, reducing database read latency for real-time account reconciliation.
-- Developed an automated statistical risk engine calculating Z-score dispersions on outgoing disbursements to flag outlier or fraudulent debits exceeding 1.8 standard deviations.
-- Wrote an automated Pytest test suite covering atomic transaction execution, schema invariant validation, and financial balance sheet mathematical integrity.
+Run the Pytest suite to verify the double-entry invariant validation, rollback behavior, and balance sheet reconciliation:
+
+```bash
+cd backend
+.\.venv\Scripts\pytest -v
 ```
+
+---
+
+## Key API Endpoints
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/health` | Service health status probe |
+| `GET` | `/api/v1/accounts` | Retrieve chart of accounts with real-time reconciled balances |
+| `POST` | `/api/v1/accounts` | Create a new general ledger account |
+| `GET` | `/api/v1/ledger` | Retrieve journal history with all debit and credit legs |
+| `POST` | `/api/v1/ledger` | **Atomically commit a verified double-entry transaction** |
+| `GET` | `/api/v1/analytics/summary` | Balance sheet, net worth, and expense breakdowns (Redis cached) |
+| `GET` | `/api/v1/analytics/anomalies` | **Statistical Z-score outlier disbursement detection** |
+
+---
+
+## Author
+
+**Pushkar Pandey**
+- GitHub: [@pushkarpandeyGit](https://github.com/pushkarpandeyGit)

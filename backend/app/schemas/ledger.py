@@ -9,7 +9,7 @@ class AccountBase(BaseModel):
     name: str = Field(..., example="Primary Checking Account")
     account_type: AccountType
     description: Optional[str] = None
-    currency: str = Field(default="GBP", example="GBP")
+    currency: str = Field(default="INR", example="GBP")
 
 class AccountCreate(AccountBase):
     pass
@@ -54,8 +54,8 @@ class JournalEntryCreate(BaseModel):
 
         if round(total_debit, 2) != round(total_credit, 2):
             raise ValueError(
-                f"Double-entry accounting violation: Total Debits (£{total_debit:.2f}) "
-                f"must equal Total Credits (£{total_credit:.2f}). Imbalance: £{abs(total_debit - total_credit):.2f}"
+                f"Double-entry accounting violation: Total Debits (Â₹{total_debit:.2f}) "
+                f"must equal Total Credits (Â₹{total_credit:.2f}). Imbalance: Â₹{abs(total_debit - total_credit):.2f}"
             )
         return self
 

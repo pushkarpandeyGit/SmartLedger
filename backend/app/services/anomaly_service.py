@@ -51,7 +51,7 @@ def detect_outlier_transactions(db: Session, z_threshold: float = 1.8) -> List[D
                 "z_score": round(z_score, 2),
                 "historical_mean": round(mean_amount, 2),
                 "posted_at": journal.posted_at.isoformat(),
-                "reason": f"Outlier debit: £{leg.amount:,.2f} is {z_score:.1f}x standard deviations above average (£{mean_amount:,.2f})"
+                "reason": f"Outlier debit: Â₹{leg.amount:,.2f} is {z_score:.1f}x standard deviations above average (Â₹{mean_amount:,.2f})"
             })
 
     flagged_anomalies.sort(key=lambda x: x["z_score"], reverse=True)

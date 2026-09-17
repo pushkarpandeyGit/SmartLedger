@@ -34,14 +34,14 @@ const AnomalyAlert = ({ anomalies = [] }) => {
                 <p className="text-xs text-slate-400 mt-0.5">{item.description}</p>
               </div>
               <span className="text-sm font-black text-rose-400 font-mono flex-shrink-0">
-                £{item.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                ₹{item.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
               </span>
             </div>
 
             <div className="flex items-center justify-between pt-2 border-t border-slate-800/80 text-[11px]">
               <span className="text-slate-400">{item.account_name}</span>
               <span className="px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 font-bold font-mono">
-                Z-Score: +{item.z_score}σ
+                Z-Score: +{item.z_score}Ïƒ
               </span>
             </div>
             

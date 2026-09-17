@@ -12,7 +12,7 @@ const ExpenseBreakdown = ({ breakdown = [], totalExpenses = 0 }) => {
           Operating Expense Distribution
         </h3>
         <span className="text-xs font-mono font-bold text-slate-400">
-          Total: £{totalExpenses.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+          Total: ₹{totalExpenses.toLocaleString(undefined, { minimumFractionDigits: 2 })}
         </span>
       </div>
 
@@ -24,7 +24,7 @@ const ExpenseBreakdown = ({ breakdown = [], totalExpenses = 0 }) => {
               <div className="flex items-center justify-between text-xs">
                 <span className="text-slate-300 font-medium">{item.name}</span>
                 <span className="font-mono text-slate-400">
-                  £{item.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })} ({pct.toFixed(1)}%)
+                  ₹{item.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })} ({pct.toFixed(1)}%)
                 </span>
               </div>
               <div className="w-full h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800">

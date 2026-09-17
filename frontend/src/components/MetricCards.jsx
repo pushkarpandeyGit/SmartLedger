@@ -2,11 +2,11 @@ import React from 'react';
 import { Wallet, CreditCard, Scale, TrendingUp } from 'lucide-react';
 
 const formatCurrency = (val) => {
-  return new Intl.NumberFormat('en-GB', {
-    style: 'currency',
-    currency: 'GBP',
+  const num = Number(val) || 0;
+  return '₹' + num.toLocaleString('en-IN', {
+    minimumFractionDigits: 2,
     maximumFractionDigits: 2
-  }).format(val || 0);
+  });
 };
 
 const MetricCards = ({ summary }) => {
@@ -66,7 +66,7 @@ const MetricCards = ({ summary }) => {
         </div>
         <div className="text-2xl font-black text-white">{formatCurrency(summary.net_income)}</div>
         <p className="text-[11px] text-blue-400 mt-1 flex items-center gap-1 font-medium">
-          Revenue (£{summary.total_revenue?.toLocaleString()}) - Expenses (£{summary.total_expenses?.toLocaleString()})
+          Revenue (₹{summary.total_revenue?.toLocaleString()}) - Expenses (₹{summary.total_expenses?.toLocaleString()})
         </p>
       </div>
     </div>

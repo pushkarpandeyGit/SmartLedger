@@ -27,7 +27,7 @@ class Account(Base):
     name = Column(String(100), nullable=False)                         # e.g. "Operational Cash Reserve"
     account_type = Column(Enum(AccountType), nullable=False)
     description = Column(String(255), nullable=True)
-    currency = Column(String(3), default="GBP")                       # NatWest default is GBP
+    currency = Column(String(3), default="INR")                       # NatWest default is GBP
     created_at = Column(DateTime, default=datetime.utcnow)
 
     # Relationships
