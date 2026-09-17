@@ -7,6 +7,14 @@ Most personal finance and expense tracker projects are built with a single trans
 I built SmartLedger according to GAAP/IFRS accounting standards: every financial event is an atomic journal entry with at least two legs where total debits must equal total credits down to the exact paisa.
 
 ---
+# Screenshots
+<img width="1807" height="842" alt="Screenshot 2026-09-18 003521" src="https://github.com/user-attachments/assets/efbac3a7-6d28-4caf-8ef6-120c3fa8d083" />
+<img width="1830" height="830" alt="Screenshot 2026-09-18 003535" src="https://github.com/user-attachments/assets/a85be69e-3dbd-4d08-8172-7c1a8f6e203d" />
+<img width="1823" height="836" alt="Screenshot 2026-09-18 003548" src="https://github.com/user-attachments/assets/fed453eb-e605-4dfa-b1e1-b7a1f3450c2b" />
+<img width="1833" height="837" alt="Screenshot 2026-09-18 003625" src="https://github.com/user-attachments/assets/3f78ac19-ba69-49d2-b568-8b67bb7f0ede" />
+
+
+
 
 ## What It Does
 
@@ -87,7 +95,6 @@ smartledger/
 │   │   ├── routers/         # /accounts, /ledger, /analytics, /health
 │   │   └── main.py          # FastAPI application & lifespan seed data
 │   ├── tests/               # Pytest automated test suite (100% passing)
-│   ├── EXPLAINER.md         # Plain-English interview notes on banking concepts
 │   ├── requirements.txt
 │   ├── pytest.ini
 │   └── Dockerfile
@@ -182,3 +189,4 @@ cd backend
 
 **Pushkar Pandey**
 - GitHub: [@pushkarpandeyGit](https://github.com/pushkarpandeyGit)
+- LinkedIn:  [@pushkarpandeyLinkedIn](https://www.linkedin.com/in/pushkar-kumar-pandey/)
