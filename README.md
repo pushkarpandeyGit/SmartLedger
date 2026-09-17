@@ -12,6 +12,7 @@ I built SmartLedger according to GAAP/IFRS accounting standards: every financial
 <img width="1830" height="830" alt="Screenshot 2026-09-18 003535" src="https://github.com/user-attachments/assets/a85be69e-3dbd-4d08-8172-7c1a8f6e203d" />
 <img width="1823" height="836" alt="Screenshot 2026-09-18 003548" src="https://github.com/user-attachments/assets/fed453eb-e605-4dfa-b1e1-b7a1f3450c2b" />
 <img width="1833" height="837" alt="Screenshot 2026-09-18 003625" src="https://github.com/user-attachments/assets/3f78ac19-ba69-49d2-b568-8b67bb7f0ede" />
+<img width="1252" height="348" alt="image" src="https://github.com/user-attachments/assets/1763eda1-d94e-4493-918b-459f5b22f943" />
 
 
 
